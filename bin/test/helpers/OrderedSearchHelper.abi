@@ -1,1 +1,0 @@
-[{"constant":true,"inputs":[{"name":"_len","type":"uint256"},{"name":"_seed","type":"uint256"}],"name":"get","outputs":[{"name":"arr","type":"bytes32[]"}],"payable":false,"stateMutability":"view","type":"function"}]
