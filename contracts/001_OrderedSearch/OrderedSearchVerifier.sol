@@ -53,7 +53,7 @@ contract OrderedSearchVerifier {
      * @param _k A key for which to search
      * @param _l An ordered (minimum to maximum) list of randomly generated hashes
      */
-    function find(bytes _code, bytes32 _k, bytes32[] _l) external {
+    function find(bytes memory _code, bytes32 _k, bytes32[] memory _l) public {
         // Set mutex to true
         mutex = true;
         // Get rid of compiler warnings
@@ -61,13 +61,29 @@ contract OrderedSearchVerifier {
         _l;
         uint gas_spent;
         assembly {
-            // Copy all of calldata to memory at 0
-            calldatacopy(0, 4, sub(calldatasize, 4))
-            
+            // Format of calldata:
+            // bytecode, _k, _l.length, _l
+            let len := mload(_l)
+            let ptr := add(add(0x20, _code), mload(_code))
+
+            // Place  _k in memory after the bytecode
+            mstore(ptr, _k)
+            ptr := add(0x20, ptr)
+            // Copy _l into memory after bytecode and _k
+            let i := 0x00
+            let next := len
+            for { } lt(i, add(0x20, mul(0x20, len))) { i := add(0x20, i) } {
+                let temp := mload(add(add(0x20, i), _l))
+                mstore(add(ptr, i), next)
+                next := temp
+            }
+
             // Get "before" gas
             gas_spent := gas
-            // Deploy bytecode with parameters
-            let deployed := create(0, 0, sub(calldatasize, 4))
+            // Deploy bytecode with parameters - no wei sent, starting from the bytecode
+            let cdsize := add(0x40, mload(_code))
+            cdsize := add(cdsize, mul(0x20, len))
+            let deployed := create(0, add(0x20, _code), cdsize)
             // Calculate gas consumed
             gas_spent := sub(gas_spent, gas)
         }
