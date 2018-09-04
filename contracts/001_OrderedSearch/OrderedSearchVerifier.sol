@@ -69,19 +69,16 @@ contract OrderedSearchVerifier {
             // Place  _k in memory after the bytecode
             mstore(ptr, _k)
             ptr := add(0x20, ptr)
+            
             // Copy _l into memory after bytecode and _k
-            let i := 0x00
-            let next := len
-            for { } lt(i, add(0x20, mul(0x20, len))) { i := add(0x20, i) } {
-                let temp := mload(add(add(0x20, i), _l))
-                mstore(add(ptr, i), next)
-                next := temp
-            }
+            let padded := sub(mload(_code), mod(mload(_code), 0x20))
+            calldatacopy(add(0x20, ptr), add(0xa4, padded), sub(calldatasize, add(0xa4, padded)))
+            mstore(ptr, 0x40)
 
             // Get "before" gas
             gas_spent := gas
             // Deploy bytecode with parameters - no wei sent, starting from the bytecode
-            let cdsize := add(0x40, mload(_code))
+            let cdsize := add(0x60, mload(_code))
             cdsize := add(cdsize, mul(0x20, len))
             let deployed := create(0, add(0x20, _code), cdsize)
             // Calculate gas consumed
