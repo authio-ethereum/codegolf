@@ -1,0 +1,36 @@
+{
+  "name": "authio-evm-codegolf",
+  "version": "0.0.1",
+  "description": "A collection of codegolf challenges and verification scripts",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/authio-ethereum/codegolf.git"
+  },
+  "keywords": [
+    "solidity",
+    "evm",
+    "codegolf",
+    "efficiency",
+    "challenge",
+    "ethereum"
+  ],
+  "author": "Alexander Wade",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/authio-ethereum/codegolf/issues"
+  },
+  "homepage": "https://github.com/authio-ethereum/codegolf#readme",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "truffle": "^4.1.14"
+  }
+}
